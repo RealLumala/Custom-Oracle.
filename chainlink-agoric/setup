@@ -1,0 +1,68 @@
+#!/bin/bash
+
+thisdir=$(dirname -- "$BASH_SOURCES[0]")
+cd "$thisdir" || exit $?
+
+source ./internal-scripts/common.sh
+
+run_setup() {
+  # yarn install
+
+  touch external_initiator1.env
+  touch external_initiator2.env
+  touch external_initiator3.env
+
+  export AG_NETWORK_CONFIG=${1-"/usr/src/dapp-oracle/chainlink-agoric/etc/network-config.json"}
+  echo "Network config: $AG_NETWORK_CONFIG"
+
+  start_docker 300 1
+
+  source ./internal-scripts/add-dapp-oracle.sh
+
+  add_dapp_oracle "1" true
+
+  source ./internal-scripts/add-ei.sh
+
+  add_ei "1"
+
+  source ./internal-scripts/add-bridge.sh
+
+  add_bridge "1"
+
+  source ./internal-scripts/add-jobspec.sh
+
+  : > jobids.txt
+  add_jobspec "1" "0x7c522c8273973e7bcf4a5dbfcc745dba4a3ab08c1e410167d7b1bdf9cb924f6c"
+
+  read -n 1 -p 'Start oracles 2 and 3 (y/N)? ' yesno
+  echo
+
+  ./show-jobs.js
+
+  case $yesno in
+  [yY]*) ;;
+  *) exit 0 ;;
+  esac
+
+  # Repeat for oracle 2
+  start_docker 300 2 3
+  add_dapp_oracle "2"
+  add_ei "2"
+  add_bridge "2"
+  add_jobspec "2" "0x06f0d58c43477508c0e5d5901342acf93a0208088816ff303996564a1d8c1c54"
+  ./show-jobs.js
+
+  # Repeat for oracle 3
+  add_dapp_oracle "3"
+  add_ei "3"
+  add_bridge "3"
+  add_jobspec "3" "0xfaa31acde43e8859565f7576d5a37e6e8ee1b0f6a7c1ae2e8b0ce2bf76248467"
+
+  title "Done setting up Chainlink nodes and services"
+
+  title "All operators are now ready"
+  echo "Jobids can be found in jobids.txt or their respective Chainlink GUIs"
+  ./show-jobs.js
+}
+
+run_setup ${1+"$1"}

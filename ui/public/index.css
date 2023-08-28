@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  padding: 20px;
+}
+
+#oracleQuery {
+  width: 100%;
+  height: 100px;
+}
+
+.visibleOnlyToOracleService {
+  display: none;
+}
+
+.queryButtons {
+  display: flex;
+  flex-direction: row;
+}
+
+.query, .reply {
+  overflow-wrap: anywhere;
+  flex-basis: 40%;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.queryReply {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.queryReply * {
+  padding-right: 10px;
+}
+
+#walletBridgeIFrame {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+div {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+#instructions {
+  width: 800px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+}
+
+.message {
+  word-wrap: break-word;
+  width: 100%;
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  /* align-items: stretch; */
+  flex-wrap: wrap;
+}
+
+.status {
+  padding: 10px;
+}
+
+#inputAmount {
+  width: 40px;
+}
+
